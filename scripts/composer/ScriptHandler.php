@@ -99,8 +99,8 @@ class ScriptHandler {
   public static function moveSubency(Event $event) {
     $fs = new Filesystem();
 
-    if ($fs->exists('vendor/actency/subency')) {
-      $fs->mirror('vendor/actency/subency', 'subency');
+    if ($fs->exists('vendor/guicom/drupactency/web')) {
+      $fs->mirror('vendor/guicom/drupactency/web', 'testweb');
     }
   }
 
