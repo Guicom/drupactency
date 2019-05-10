@@ -49,10 +49,5 @@
     },
     "conflict": {
         "drupal/drupal": "*"
-    },
-    "autoload": {
-        "classmap": [
-            "scripts/composer/ScriptHandler.php"
-        ]
     }
 }
