@@ -35,12 +35,7 @@
     "require": {
         "composer/installers": "^1.2",
         "wikimedia/composer-merge-plugin": "1.4.1",
-        "cweagans/composer-patches": "~1.0",
-        "drupal-composer/drupal-scaffold": "^2.2",
-        "drupal/console": "~1.0",
-        "drupal/core": "~8.4",
-        "drush/drush": "~8.0",
-        "actency/subency" : "8.0.0"
+        "cweagans/composer-patches": "~1.0"
     },
     "require-dev": {
         "behat/mink": "~1.7",
@@ -50,7 +45,7 @@
         "mikey179/vfsStream": "~1.2",
         "phpunit/phpunit": "~4.8",
         "symfony/css-selector": "~2.8",
-        "drupal/devel": "1.0-beta1"
+        "drupal/devel": "^1.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -59,40 +54,5 @@
         "classmap": [
             "scripts/composer/ScriptHandler.php"
         ]
-    },
-    "scripts": {
-        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
-        "pre-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "pre-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-        ],
-        "post-install-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "DrupalProject\\composer\\ScriptHandler::moveSubency",
-            "@drupal-scaffold"
-        ],
-        "post-update-cmd": [
-            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-            "DrupalProject\\composer\\ScriptHandler::moveSubency",
-            "@drupal-scaffold"
-        ]
-    },
-    "extra": {
-        "installer-paths": {
-            "subency/project/web/core": ["type:drupal-core"],
-            "subency/project/web/libraries/{$name}": ["type:drupal-library"],
-            "subency/project/web/modules/contrib/{$name}": ["type:drupal-module"],
-            "subency/project/web/profiles/contrib/{$name}": ["type:drupal-profile"],
-            "subency/project/web/themes/contrib/{$name}": ["type:drupal-theme"],
-            "subency/project/web/themes/custom/{$name}": ["type:drupal-custom-theme"],
-            "bin/drush/contrib/{$name}": ["type:drupal-drush"]
-        },
-        "merge-plugin": {
-            "include": [
-                "subency/project/composer.json"
-            ]
-        }
     }
 }
