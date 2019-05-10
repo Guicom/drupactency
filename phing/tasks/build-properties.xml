@@ -1,0 +1,149 @@
+<project name="build-properties" default="build-properties">
+    <target name='build-properties'>
+        <phingcall target="build-properties-local-file-exist" />
+    </target>
+
+    <!-- Build example.build.properties.local file -->
+    <target name='build-properties-local-file-exist'>
+        <if>
+            <available file="phing/build.properties.local" type="file"/>
+            <then>
+                <if>
+                    <!-- trick to repeat the question if answer doesn't match an expected answer -->
+                    <equals arg1="true" arg2="true" />
+                    <then>
+                        <!-- Prompt -->
+                        <input propertyName="deleted.build.properties.local" defaultValue="n" validArgs="y,n">phing/build.properties.local exist do you want to recreate it ?</input>
+                    </then>
+                </if>
+                <if>
+                    <equals arg1="${deleted.build.properties.local}" arg2="y" />
+                    <then>
+                        <phingcall target="build-properties-local-file-deleted" />
+                        <phingcall target="build-properties-local-file-created" />
+                    </then>
+                </if>
+            </then>
+            <else>
+                <phingcall target="build-properties-local-file-created" />
+            </else>
+        </if>
+    </target>
+
+    <!-- deleted build.properties.local file -->
+    <target name='build-properties-local-file-deleted'>
+        <delete file="phing/build.properties.local" />
+    </target>
+
+    <!-- created build.properties.local file -->
+    <target name='build-properties-local-file-created'>
+        <property environment="env" />
+
+        <if>
+            <isset property="env.TRAVIS" />
+        <then>
+            <copy file="phing/travis.build.properties.local" tofile="phing/build.properties.local" overwrite="true"/>
+        </then>
+        <else>
+            <copy file="phing/example.build.properties.local" tofile="phing/build.properties.local" overwrite="true"/>
+        </else>
+        </if>
+    </target>
+
+    <target name='build-settings-local'>
+        <if>
+            <available file="${website.settings.local.php}" type="file"/>
+            <then>
+                <if>
+                    <equals arg1="true" arg2="true" />
+                    <then>
+                        <!-- Prompt -->
+                        <input propertyName="deleted.settings.local" defaultValue="n" validArgs="y,n">config/drupal/settings.local.php exist do you want to recreate it ?</input>
+                    </then>
+                </if>
+                <if>
+                    <equals arg1="${deleted.settings.local}" arg2="y" />
+                    <then>
+                        <phingcall target="build-settings-local-file-deleted" />
+                        <phingcall target="build-settings-local-file" />
+                    </then>
+                </if>
+            </then>
+            <else>
+                <phingcall target="build-settings-local-file" />
+            </else>
+        </if>
+    </target>
+
+    <!-- deleted settings.local.php file -->
+    <target name='build-settings-local-file-deleted'>
+        <delete file="${website.settings.local.php}" />
+    </target>
+
+    <target name='build-settings' depends="generate-salt">
+        <if>
+            <and>
+                <isset property="in-file" />
+                <isset property="out-file" />
+            </and>
+            <then>
+                <echo msg="Copy file from ${in-file} to ${out-file}" />
+                <copy file="${in-file}" tofile="${out-file}" overwrite="true"/>
+
+                <propertyregex property="tmp.reg_base_url" subject="${drupal.base_url}" pattern="\." replace="\." />
+
+                <if>
+                    <isset property="env.TRAVIS"/>
+                    <then>
+                        <reflexive file="${out-file}">
+                            <filterchain>
+                                <replacetokens begintoken="***" endtoken="***">
+                                    <token key="GENERATE_SALT" value="${salt}" />
+                                    <token key="BASE_URL" value="${drupal.base_url}" />
+                                    <token key="URL_HTTP" value="${drupal.travis.base_url_http}" />
+                                    <token key="REG_BASE_URL" value="${tmp.reg_base_url}" />
+                                    <token key="DATABASE" value="${drupal.db.name}" />
+                                    <token key="USERNAME" value="${drupal.db.user}" />
+                                    <token key="PASSWORD" value="${drupal.db.password}" />
+                                    <token key="DOMAIN" value="${drupal.base_url}" />
+                                </replacetokens>
+                            </filterchain>
+                        </reflexive>
+                    </then>
+                    <else>
+                        <reflexive file="${out-file}">
+                            <filterchain>
+                                <replacetokens begintoken="***" endtoken="***">
+                                    <token key="GENERATE_SALT" value="${salt}" />
+                                    <token key="BASE_URL" value="${drupal.base_url}" />
+                                    <token key="URL_HTTP" value="${drupal.base_url_http}" />
+                                    <token key="REG_BASE_URL" value="${tmp.reg_base_url}" />
+                                    <token key="DATABASE" value="${drupal.db.name}" />
+                                    <token key="USERNAME" value="${drupal.db.user}" />
+                                    <token key="PASSWORD" value="${drupal.db.password}" />
+                                    <token key="DOMAIN" value="${drupal.base_url}" />
+                                </replacetokens>
+                            </filterchain>
+                        </reflexive>
+                    </else>
+                </if>
+                <chmod file="${out-file}" mode="750" verbose="true" />
+            </then>
+        </if>
+    </target>
+
+    <!-- created settings.local.php file -->
+    <target name='build-settings-local-file'>
+        <property name="in-file" value="${website.settings.local.php.example}" />
+        <property name="out-file" value="${website.settings.local.php}" />
+
+        <phingcall target="build-settings" />
+    </target>
+
+    <target name='build-settings-travis'>
+        <property name="in-file" value="${website.settings.travis.php.example}" />
+        <property name="out-file" value="${website.settings.travis.php}" />
+
+        <phingcall target="build-settings" />
+    </target>
+</project>

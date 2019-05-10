@@ -1,0 +1,69 @@
+# Paths
+# -----
+
+# Paths to executables.
+composer.bin = /usr/bin/composer
+drush.bin = ${project.basedir}/../vendor/bin/drush
+phing.bin = ${project.basedir}/../vendor/bin/phing
+drupal.bin = ${project.basedir}/../vendor/bin/drupal
+npm.bin = npm
+
+# Files and directories inside the Drupal installation.
+website.drupal.dir = ${project.basedir}/project/web
+website.drupal.postbuild.path = ${project.basedir}/scripts/drupal/post-build.yml
+
+website.sites.dir = ${website.drupal.dir}/sites
+website.site.dir = ${website.drupal.sites.dir}/all
+
+website.settings.dir = ${website.sites.dir}/default
+website.settings.php = ${website.settings.dir}/settings.php
+website.settings.local.php.example = ${website.config.path}/example.settings.local.php
+website.settings.php.example = ${website.config.path}/example.settings.php
+website.settings.local.php = ${website.config.path}/settings.local.php
+website.settings.travis.php.example = ${website.config.path}/example.settings.travis.php
+website.settings.travis.php = ${website.config.path}/settings.travis.php
+website.services.local.yml = ${website.settings.dir}/services.local.yml
+website.services.local.yml.example = ${website.settings.dir}/example.services.local.yml
+website.salt.tmp.path = ${project.basedir}/scripts/drupal/hash1temp.txt
+website.files.dir = ${website.settings.dir}/files
+website.profile.name = standard
+
+website.config.path = ${project.basedir}/project/config/drupal
+
+website.modules.dir = ${website.drupal.dir}/modules
+website.profiles.dir = ${website.drupal.dir}/profiles
+website.themes.dir = ${website.drupal.dir}/themes
+
+# Backup folder
+db.backup.dir = ${project.basedir}/project/data/db/
+config.backup.dir = ${project.basedir}/project/config/drupal/local
+
+# Database import on deploy (TRUE or FALSE)
+# -------------------
+db.deploy.import = FALSE
+
+# Development options
+# -------------------
+
+# Development modules to enable.
+
+# PROD options
+# -------------------
+
+# Verbosity of Drush commands. Set to 'yes' for verbose output.
+drush.verbose = yes
+# Verbosity of Drupal console. Set to 'yes' for verbose output.
+drupal.verbose = yes
+
+tests.dir = ${project.basedir}/tests
+
+# TEST - BEHAT
+# --------------
+behat.enabled = yes
+behat.bin = ${project.basedir}/vendor/bin/behat
+behat.dir = ${tests.dir}/behat
+behat.tags = cit
+behat.config.file = ${behat.dir}/behat.local.yml
+behat.config.file.example = ${behat.dir}/behat.example.yml
+behat.config.file.local = ${behat.dir}/behat.local.yml
+behat.report.dir = ${project.basedir}/build/logs/behat

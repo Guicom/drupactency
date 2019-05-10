@@ -1,0 +1,24 @@
+<project name="gulp" default="gulp">
+    <target name="gulp:install">
+        <exec command="${npm.bin} install gulp --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-autoprefixer --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-imagemin --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-notify --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-plumber --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-sass --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-sass-glob --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-shell --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-sourcemaps --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-scss-lint --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install jshint --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-jshint --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+        <exec command="${npm.bin} install gulp-watch --no-bin-links" dir="${website.drupal.dir}" passthru="true"/>
+    </target>
+    <target name="gulp:build">
+        <exec command="gulp build" dir="${website.drupal.dir}" passthru="true"/>
+    </target>
+
+    <target name="gulp:css">
+        <exec command="gulp css" dir="${website.drupal.dir}" passthru="true"/>
+    </target>
+</project>

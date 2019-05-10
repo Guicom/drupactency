@@ -1,0 +1,53 @@
+<project name="site-uuid" default="site-uuid">
+
+    <!-- Set the site uuid". -->
+    <target name="set-site-uuid">
+        <echo msg="UUID = ${website.uuid}" />
+        <if>
+            <isset property="website.uuid" />
+            <then>
+                <drush
+                        command="config-set"
+                        assume="yes"
+                        root="${website.drupal.dir}"
+                        bin="${drush.bin}"
+                        verbose="${drush.verbose}">
+                    <param>"system.site"</param>
+                    <param>"uuid"</param>
+                    <param>${website.uuid}</param>
+                </drush>
+            </then>
+        </if>
+    </target>
+
+    <!-- Synchronize Site-UUID -->
+    <target name="sync-site-uuid" depends="read-site-uuid">
+        <phingcall target="set-site-uuid" />
+    </target>
+
+    <!-- Read the uuid from system.site.yml and stored in website.uuid -->
+    <target name="read-site-uuid">
+        <if>
+            <isset property="conf" />
+            <then>
+                <!-- Retrieving stored UUID -->
+                <exec command="grep 'uuid:' ${project.basedir}/project/config/drupal/${conf}/system.site.yml | tail -n 1" outputProperty="siteId" />
+                <property name="siteId" value="uuid: ${siteId}" />
+                <exec command="echo ${siteId} | sed s/uuid:\ //g" outputProperty="website.uuid" />
+
+                <!-- we exit if the uuid is not found -->
+                <if>
+                    <equals arg1="${website.uuid}" arg2=""/>
+                    <then>
+                        <fail msg="Unable to retrieve site UUID."/>
+                    </then>
+                </if>
+            </then>
+            <else>
+                <fail msg="conf or website.uuid property not defined. Must be defined to sync for instance." />
+            </else>
+        </if>
+
+    </target>
+
+</project>

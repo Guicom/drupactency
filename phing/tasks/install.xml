@@ -1,0 +1,91 @@
+<project name="install" default="install">
+
+    <!-- Install the website. -->
+    <target name="install" depends="build-properties, writable-settings-folder, writable-settings-php">
+
+        <property environment="env" />
+
+        <!-- Generating the settings.php file in web/sites/default -->
+        <if>
+            <isset property="env.TRAVIS" />
+            <then>
+                <phingcall target="build-settings-travis" />
+            </then>
+            <else>
+                <phingcall target="build-settings-local" />
+            </else>
+        </if>
+
+        <!-- Generating the services.local.yml file -->
+        <if>
+            <and>
+                <not>
+                    <available file="${website.services.local.yml}" type="file"/>
+                </not>
+                <available file="${website.services.local.yml.example}" type="file"/>
+            </and>
+            <then>
+                <echo msg="Copy file from ${website.services.local.yml.example} to ${website.services.local.yml}" />
+                <copy file="${website.services.local.yml.example}" tofile="${website.services.local.yml}" />
+            </then>
+        </if>
+
+        <!-- Generating the settings.php file in web/sites/default -->
+        <echo msg="${website.settings.php.example}" />
+        <if>
+            <and>
+                <available file="${website.settings.php.example}" type="file"/>
+            </and>
+            <then>
+                <echo msg="Copy file from ${website.settings.php.example} to ${website.settings.php}" />
+                <copy file="${website.settings.php.example}" tofile="${website.settings.php}" overwrite="true"/>
+            </then>
+        </if>
+
+        <!-- generating databases -->
+        <if>
+            <not>
+                <available file="${db.backup.dir}" type="dir" />
+            </not>
+            <then>
+                <mkdir dir="${db.backup.dir}" />
+            </then>
+        </if>
+
+        <if>
+            <not>
+                <isset property="env.TRAVIS" />
+            </not>
+            <then>
+                <if>
+                    <equals arg1="true" arg2="true" />
+                    <then>
+                        <!-- Prompt -->
+                        <input propertyName="import.database" defaultValue="n" validArgs="y,n">Do you want to import a database (y/n)?</input>
+                    </then>
+                </if>
+
+                <if>
+                    <equals arg1="${import.database}" arg2="y" />
+                    <then>
+                        <echo msg="Place your sql file in ${db.backup.dir}" />
+                        <propertyprompt propertyName="import.db.file" promptText="What is the name of the sql file (example: example.sql.gz)  ? " />
+
+                        <if>
+                            <not>
+                                <available file="${db.backup.dir}/${import.db.file}" type="file"/>
+                            </not>
+                            <then>
+                                <echo msg="file ${db.backup.dir}/${import.db.file} not found. continue without db import." />
+                                <property name="import.db.file" value="" />
+                            </then>
+                        </if>
+                    </then>
+                </if>
+            </then>
+        </if>
+
+        <phingcall target="build" />
+    </target>
+
+</project>

@@ -1,0 +1,22 @@
+uuid: 12550c3e-04ee-4409-bc30-7b22e0411e55
+langcode: fr
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bactency
+_core:
+  default_config_hash: iggZSiUKz4mYP1YPJ8SsUfFu79HIgOTt6IDy3Up59aM
+id: bactency_powered
+theme: bactency
+region: footer
+weight: -10
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }

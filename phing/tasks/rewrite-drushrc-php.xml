@@ -1,0 +1,22 @@
+<project name="rewrite-drushrc-php" default="rewrite-drushrc">
+    <target name="rewrite-drushrc">
+        <if>
+            <available file="project/config/drupal/drushrc.local.php" type="file" />
+            <then>
+                <reflexive file="project/config/drupal/drushrc.local.php">
+                    <filterchain>
+                        <replaceregexp>
+                            <regexp
+                                    pattern="\$options\[\'uri\'\]\ =\ (.*);"
+                                    replace="\$options['uri'] = '${drupal.base_url_http}';" />
+                        </replaceregexp>
+                    </filterchain>
+                </reflexive>
+            </then>
+            <else>
+                <echo msg="File project/config/drupal/drushrc.local.php doesn't exists." level="error" />
+            </else>
+        </if>
+    </target>
+
+</project>

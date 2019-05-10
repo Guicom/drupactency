@@ -1,0 +1,14 @@
+<project name="test" default="test:run">
+    <target name='test:run'>
+        <exec command="php ./core/scripts/run-tests.sh --verbose --color --directory modules/custom --php $(which php) --url $BASE_URL" dir="${website.drupal.dir}" passthru="true" checkreturn="true"/>
+
+        <if>
+            <equals arg1="${behat.enabled}" arg2="yes" />
+            <then>
+                <phingcall target="behat:run" />
+            </then>
+        </if>
+
+        <phingcall target="phantomcss:test" description="Run Visual Inspection" />
+    </target>
+</project>

@@ -1,0 +1,93 @@
+<project name="behat" default="behat:run">
+
+    <property environment="env" />
+
+    <target name="behat:init"
+            description="Setup steps for Behat build tasks."
+            unless="behat.initialized"
+            hidden="true"
+            depends="behat:config">
+        <mkdir dir="${behat.report.dir}" />
+        <property name="behat.initialized" value="true" />
+    </target>
+
+    <target name="behat:config"
+            description="Configures Behat for the project.">
+        <if>
+            <isset property="env.TRAVIS"/>
+            <then>
+                <copy file="${behat.config.file.example}"
+                      tofile="${behat.config.file.local}"
+                      overwrite="true">
+                    <filterchain>
+                        <replacetokens begintoken="***" endtoken="***">
+                            <token key="GENERATE_SALT" value="${salt}" />
+                            <token key="BASE_URL" value="${drupal.base_url}" />
+                            <token key="URL_HTTP" value="${drupal.travis.base_url_http}" />
+                            <token key="REG_BASE_URL" value="${tmp.reg_base_url}" />
+                            <token key="DATABASE" value="${drupal.db.name}" />
+                            <token key="USERNAME" value="${drupal.db.user}" />
+                            <token key="PASSWORD" value="${drupal.db.password}" />
+                            <token key="DOMAIN" value="${drupal.base_url}" />
+                        </replacetokens>
+                    </filterchain>
+                </copy>
+            </then>
+            <else>
+                <copy file="${behat.config.file.example}"
+                      tofile="${behat.config.file.local}"
+                      overwrite="false">
+                    <filterchain>
+                        <replacetokens begintoken="***" endtoken="***">
+                            <token key="GENERATE_SALT" value="${salt}" />
+                            <token key="BASE_URL" value="${drupal.base_url}" />
+                            <token key="URL_HTTP" value="${drupal.base_url_http}" />
+                            <token key="REG_BASE_URL" value="${tmp.reg_base_url}" />
+                            <token key="DATABASE" value="${drupal.db.name}" />
+                            <token key="USERNAME" value="${drupal.db.user}" />
+                            <token key="PASSWORD" value="${drupal.db.password}" />
+                            <token key="DOMAIN" value="${drupal.base_url}" />
+                        </replacetokens>
+                    </filterchain>
+                </copy>
+            </else>
+        </if>
+    </target>
+
+    <target name="behat:run"
+            description="Runs Behat tests and prints human readable output. Intended for usage on the command line before committing."
+            depends="behat:init">
+        <if>
+            <isset property="behat.tags"/>
+            <then>
+                <exec command="${behat.bin} --tags ${behat.tags} --colors --config ${behat.config.file.local}"
+                      passthru="true"
+                      checkreturn="true" />
+            </then>
+            <else>
+                <exec command="${behat.bin} --colors --config ${behat.config.file.local}"
+                      passthru="true"
+                      checkreturn="true" />
+            </else>
+        </if>
+    </target>
+
+    <target name="behat:run-ci"
+            description="Runs Behat tests and prints human readable output. Intended for usage on the continuous integration server."
+            depends="behat:init">
+        <if>
+            <isset property="behat.tags"/>
+            <then>
+                <exec command="${behat.bin} --tags ${behat.tags} --format junit --out ${behat.report.dir} --config ${behat.config.file.local}"
+                    passthru="true"
+                    checkreturn="true" />
+            </then>
+            <else>
+                <exec command="${behat.bin} --format junit --out ${behat.report.dir} --config ${behat.config.file.local}"
+                    passthru="true"
+                    checkreturn="true" />
+            </else>
+        </if>
+    </target>
+
+</project>

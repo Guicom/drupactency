@@ -1,0 +1,26 @@
+uuid: 90f4f686-99a2-491a-b11e-c1799d1b46bc
+langcode: fr
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - bactency
+_core:
+  default_config_hash: JLZHhgadeMAZ2fcVSWyHJi3AmEUIiTiYbGGaEI8UrYM
+id: bactency_main_menu
+theme: bactency
+region: sidebar_first
+weight: 10
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 2
+visibility: {  }

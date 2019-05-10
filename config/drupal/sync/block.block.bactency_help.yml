@@ -1,0 +1,22 @@
+uuid: 3985154a-f3ee-44aa-ab7d-96945c6ce45a
+langcode: fr
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - bactency
+_core:
+  default_config_hash: MhtNdV__HKRTab0ZPjkPNfYL4Ng4UPBucDLoC7Rg5Eo
+id: bactency_help
+theme: bactency
+region: help
+weight: -30
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

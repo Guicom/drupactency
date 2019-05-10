@@ -1,0 +1,37 @@
+<project name="theme" default="theme:init">
+    <target name="theme:init">
+        <exec command="cp -rf ${website.themes.dir}/contrib/bootstrap/starterkits/sass ${website.themes.dir}/custom/${website.theme.name}" />
+        <!-- installing gulp & bower -->
+        <exec command="npm run setup" dir="${website.drupal.dir}" passthru="true"/>
+        <phingcall target="bower:install" />
+        <copy file="${website.themes.dir}/custom/${website.theme.name}/assets/vendors/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss"
+              tofile="${website.themes.dir}/custom/${website.theme.name}/assets/scss/_bootstrap-overrides.scss" />
+        <drush
+                command="pm-enable"
+                assume="yes"
+                root="${website.drupal.dir}"
+                bin="${drush.bin}"
+                verbose="${drush.verbose}">
+            <param>bootstrap</param>
+        </drush>
+        <drush
+                command="pm-enable"
+                assume="yes"
+                root="${website.drupal.dir}"
+                bin="${drush.bin}"
+                verbose="${drush.verbose}">
+            <param>${website.theme.name}</param>
+        </drush>
+        <drush
+                command="config-set"
+                assume="yes"
+                root="${website.drupal.dir}"
+                bin="${drush.bin}"
+                verbose="${drush.verbose}">
+            <param>"system.theme"</param>
+            <param>"default"</param>
+            <param>${website.theme.name}</param>
+        </drush>
+        <phingcall target="clear-cache" />
+    </target>
+</project>

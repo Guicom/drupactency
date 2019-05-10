@@ -1,0 +1,83 @@
+<project name="build" default="build">
+    <property name="conf" value="sync" />
+
+    <target name="build">
+        <echo>Building site</echo>
+
+        <!-- Update the autoload classes & install dependencies -->
+        <phingcall target="install-composer-dependencies" />
+
+        <!-- Initialization of the drupal console -->
+        <phingcall target="init-drupal-console" />
+
+        <!-- Initialization of field_encryptions -->
+        <phingcall target="init-fields_encryption-keys" />
+
+        <if>
+            <not>
+                <isset property="env.TRAVIS" />
+            </not>
+            <then>
+                <!-- Performing backup of existing environment -->
+                <phingcall target="backup-all" />
+            </then>
+        </if>
+
+        <!-- if import.db.file is defined, perform import -->
+        <if>
+            <and>
+                <isset property="import.db.file" />
+                <not>
+                    <equals arg1="${import.db.file}" arg2="" />
+                </not>
+            </and>
+            <then>
+                <echo>Performing database import</echo>
+                <drush
+                    command="sql-drop"
+                    assume="yes"
+                    root="${website.drupal.dir}"
+                    bin="${drush.bin}"
+                    verbose="${drush.verbose}"
+                />
+            </then>
+            <else>
+                <!-- Create drushrc.php -->
+                <phingcall target="rewrite-drushrc" />
+
+                <drush
+                        command="site-install"
+                        assume="yes"
+                        root="${website.drupal.dir}"
+                        bin="${drush.bin}"
+                        verbose="${drush.verbose}"
+
+                >
+                    <param>${website.profile.name}</param>
+                    <param escape="no">install_configure_form.enable_update_status_module=NULL</param>
+                </drush>
+
+                <!-- clear cache -->
+                <phingcall target="clear-cache" />
+
+                <echo>Synchronizing site UUID into the current instance.</echo>
+                <phingcall target="sync-site-uuid" />
+
+                <!-- Removing default shortcut links, this is mandatory for the importation to be done. -->
+                <!-- More details here: https://www.drupal.org/node/2583113 -->
+                <!-- @todo: Remove this when the issue is fixed on drupal.org. -->
+                <echo>
+                    Removing default shortcut links to ensure a proper importation.
+                    This is a community fix, see https://www.drupal.org/node/2583113).
+                </echo>
+                <exec command="${drupal.bin} entity:delete shortcut_set default" dir="${project.basedir}/project/web" passthru="true" />
+
+                <echo>Importing configuration from sync</echo>
+                <exec command="${drupal.bin} config:import --directory=${project.basedir}/project/config/drupal/sync --no-interaction" dir="${website.drupal.dir}" passthru="true" />
+            </else>
+        </if>
+
+        <echo>Performing drupal postbuild operations</echo>
+        <phingcall target="drupal-postbuild" />
+    </target>
+</project>

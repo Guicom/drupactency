@@ -1,0 +1,40 @@
+<project name="composer" default="composer">
+
+    <target name="composer-init">
+        <property environment="env" />
+
+        <if>
+            <isset property="env.TRAVIS"/>
+            <then>
+                <property name="composer" value="/home/travis/.phpenv/versions/${env.TRAVIS_PHP_VERSION}/bin/composer" />
+            </then>
+            <else>
+                <property name="composer" value="${composer.bin}" />
+            </else>
+        </if>
+    </target>
+
+    <!-- Install Composer dependencies for the build system. -->
+    <target name="install-composer-dependencies" depends="composer-init">
+        <echo>Running composer install task</echo>
+
+        <!-- Update the autoload classes, this is sometimes required -->
+        <!-- if the project has been installed and some files has been deleted. -->
+        <composer command="dump-autoload" composer="${composer}">
+            <arg value="--working-dir=${project.basedir}/.." />
+        </composer>
+
+        <!-- Install all the packages -->
+        <composer command="install" composer="${composer}">
+            <arg value="--working-dir=${project.basedir}/.." />
+        </composer>
+    </target>
+
+    <!-- Update Composer dependencies for the deployment. -->
+    <target name="update-composer-dependencies" depends="composer-init">
+        <composer command="update" composer="${composer}">
+            <arg value="--working-dir=${project.basedir}/.." />
+        </composer>
+    </target>
+
+</project>

@@ -1,0 +1,37 @@
+<project name="drupal-console" default="drupal-console">
+    <target name="init-settings">
+        <if>
+            <not>
+                <isset property="drupal.verbose" />
+            </not>
+            <then>
+                <property name="drupal.verbose" value="false"/>
+            </then>
+        </if>
+
+        <if>
+            <equals arg1="${drupal.verbose}" arg2="yes" casesensitive="false" />
+            <then>
+                <property name="drupal.verbose.cmdline" value="--verbose" />
+            </then>
+            <else>
+                <property name="drupal.verbose.cmdline" value="" />
+            </else>
+        </if>
+    </target>
+
+    <target name="init-drupal-console" depends="init-settings">
+        <echo>Initialization of the drupal console</echo>
+        <exec command="${drupal.bin} init --override --no-interaction ${drupal.verbose.cmdline}" passthru="true"/>
+    </target>
+
+    <target name="drupal-postbuild" depends="init-settings">
+        <if>
+            <isset property="website.drupal.postbuild.path" />
+            <then>
+                <echo msg="Executing ${website.drupal.postbuild.path} postbuild file" />
+                <exec command="${drupal.bin} chain --file=${website.drupal.postbuild.path} -y ${drupal.verbose.cmdline}" passthru="true" />
+            </then>
+        </if>
+    </target>
+</project>

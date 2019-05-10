@@ -1,0 +1,24 @@
+<project name="backup" default="backup">
+    <!-- Backup config + DB - need split. -->
+    <target name="backup-all">
+        <echo>Starting database and configuration backup</echo>
+        <!-- preparing timestamp -->
+        <tstamp>
+            <format property="currenttime" pattern="%Y%m%d%H%M%S"/>
+        </tstamp>
+
+        <!-- database backup -->
+        <exec command="${drupal.bin} database:dump --gz --file='${db.backup.dir}/local-${currenttime}.sql'"
+              dir="${website.drupal.dir}"
+              outputProperty="cmd_output"
+        />
+        <echo>The database was dumped at "${project.basedir}/data/db/local-${currenttime}.sql.gz</echo>
+
+        <!-- config export -->
+        <exec command="${drupal.bin} config:export --directory='${config.backup.dir}'"
+              dir="${website.drupal.dir}"
+              outputProperty="cmd_output"
+        />
+        <echo>The config has been exported in ${project.basedir}/config/drupal/local</echo>
+    </target>
+</project>

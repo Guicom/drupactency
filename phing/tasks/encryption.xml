@@ -1,0 +1,41 @@
+<project name="encrytion" default="encrytion">
+
+    <!-- Install Composer dependencies for the build system. -->
+    <target name="init-fields_encryption-keys">
+        <echo>Generation encryption key file</echo>
+        <if>
+            <and>
+                <not>
+                    <available file="${website.config.path}/keys/fields_encryption_key.txt" />
+                </not>
+                <available file="${website.config.path}/keys/fields_encryption_key-example.txt" />
+            </and>
+            <then>
+                <copy file="${website.config.path}/keys/fields_encryption_key-example.txt" tofile="${website.config.path}/keys/fields_encryption_key.txt" />
+            </then>
+        </if>
+
+        <echo>Generation encryption token file</echo>
+        <if>
+            <and>
+                <not>
+                    <available file="${website.config.path}/keys/tokens_encryption_key.txt" />
+                </not>
+                <available file="${website.config.path}/keys/tokens_encryption_key-example.txt" />
+            </and>
+            <then>
+                <copy file="${website.config.path}/keys/tokens_encryption_key-example.txt" tofile="${website.config.path}/keys/tokens_encryption_key.txt" />
+            </then>
+        </if>
+    </target>
+
+    <target name="generate-salt">
+        <drush command="ev">
+            <param>'$hash1 = Drupal\Component\Utility\Crypt::randomBytesBase64(55); print $hash1 . "\n"; file_put_contents("${website.salt.tmp.path}", $hash1);'</param>
+        </drush>
+        <loadfile property="salt" file="${website.salt.tmp.path}"/>
+        <echo msg="generated salt ${salt}" />
+        <delete file="${website.salt.tmp.path}" />
+    </target>
+
+</project>

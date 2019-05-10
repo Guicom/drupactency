@@ -1,0 +1,22 @@
+uuid: dbc7b763-8496-4e23-a833-f449bd5f0a14
+langcode: fr
+status: true
+dependencies:
+  theme:
+    - bactency
+_core:
+  default_config_hash: qHdtze2DZ2mFfaJadxjZz6epm92_SN9SAFY4yJGl8Fo
+id: bactency_local_tasks
+theme: bactency
+region: header
+weight: 10
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

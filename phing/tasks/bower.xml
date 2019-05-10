@@ -1,0 +1,5 @@
+<project name="bower" default="bower:install">
+    <target name="bower:install">
+        <exec command="bower install" dir="${website.drupal.dir}" passthru="true"/>
+    </target>
+</project>

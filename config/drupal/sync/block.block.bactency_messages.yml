@@ -1,0 +1,22 @@
+uuid: 8ad4eb50-0e00-4ce8-add4-4bbba12776e6
+langcode: fr
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bactency
+_core:
+  default_config_hash: 9RnnTUBcn0WRWXfrGOnId2H0Q31uQUeu_F5TnDxl2yg
+id: bactency_messages
+theme: bactency
+region: header
+weight: -50
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+visibility: {  }
