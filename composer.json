@@ -1,0 +1,98 @@
+{
+    "name": "drupency",
+    "description": "Drupency for Drupal 8 starterkit",
+    "type": "project",
+    "license": "proprietary",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+          "name": "John Doe",
+          "email": "john.doe@example.fr",
+          "role": "Developer"
+        }
+    ],
+    "repositories": [
+        {
+          "type": "composer",
+          "url": "https://packages.drupal.org/8"
+        },
+        {
+          "type": "composer",
+          "url": "https://packagist.org"
+        },
+        {
+          "type": "composer",
+          "url": "https://repo.packagist.com/actency/"
+        },
+        {
+          "_comment": "The PhingDrushTask module does not currently have a D8 release and is not available on https://packages.drupal.org/8. See https://www.drupal.org/node/2817131.",
+          "type": "vcs",
+          "url": "https://git.drupal.org/project/phingdrushtask.git"
+        },
+        { "packagist": false }
+    ],
+    "require": {
+        "composer/installers": "^1.2",
+        "wikimedia/composer-merge-plugin": "1.4.1",
+        "cweagans/composer-patches": "~1.0",
+        "drupal-composer/drupal-scaffold": "^2.2",
+        "drupal/console": "~1.0",
+        "drupal/core": "~8.4",
+        "drush/drush": "~8.0",
+        "actency/subency" : "8.0.0"
+    },
+    "require-dev": {
+        "behat/mink": "~1.7",
+        "behat/mink-goutte-driver": "~1.2",
+        "jcalderonzumba/gastonjs": "~1.0.2",
+        "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
+        "mikey179/vfsStream": "~1.2",
+        "phpunit/phpunit": "~4.8",
+        "symfony/css-selector": "~2.8",
+        "drupal/devel": "1.0-beta1"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "autoload": {
+        "classmap": [
+            "scripts/composer/ScriptHandler.php"
+        ]
+    },
+    "scripts": {
+        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        "pre-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "pre-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "post-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "DrupalProject\\composer\\ScriptHandler::moveSubency",
+            "@drupal-scaffold"
+        ],
+        "post-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "DrupalProject\\composer\\ScriptHandler::moveSubency",
+            "@drupal-scaffold"
+        ]
+    },
+    "extra": {
+        "installer-paths": {
+            "subency/project/web/core": ["type:drupal-core"],
+            "subency/project/web/libraries/{$name}": ["type:drupal-library"],
+            "subency/project/web/modules/contrib/{$name}": ["type:drupal-module"],
+            "subency/project/web/profiles/contrib/{$name}": ["type:drupal-profile"],
+            "subency/project/web/themes/contrib/{$name}": ["type:drupal-theme"],
+            "subency/project/web/themes/custom/{$name}": ["type:drupal-custom-theme"],
+            "bin/drush/contrib/{$name}": ["type:drupal-drush"]
+        },
+        "merge-plugin": {
+            "include": [
+                "subency/project/composer.json"
+            ]
+        }
+    }
+}
