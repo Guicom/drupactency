@@ -1,5 +1,5 @@
 {
-    "name": "drupency",
+    "name": "guicom/drupactency",
     "description": "Drupency for Drupal 8 starterkit",
     "type": "project",
     "license": "proprietary",
