@@ -14,26 +14,13 @@ use Symfony\Component\Filesystem\Filesystem;
 class ScriptHandler {
 
   protected static function getDrupalRoot($project_root) {
-    return $project_root . '/subency/project/web';
+    return $project_root . '/web';
   }
 
   public static function createRequiredFiles(Event $event) {
     $fs = new Filesystem();
     $root = static::getDrupalRoot(getcwd());
 
-    $dirs = [
-      'modules',
-      'profiles',
-      'themes',
-    ];
-
-    // Required for unit testing
-    foreach ($dirs as $dir) {
-      if (!$fs->exists($root . '/'. $dir)) {
-        $fs->mkdir($root . '/'. $dir);
-        $fs->touch($root . '/'. $dir . '/.gitkeep');
-      }
-    }
 
     // Prepare the settings file for installation
     if (!$fs->exists($root . '/sites/default/settings.php') and $fs->exists($root . '/sites/default/default.settings.php')) {
