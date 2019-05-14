@@ -29,7 +29,7 @@
         { "packagist": false }
     ],
     "require": {
-        "composer/installers": "^1.2",
+        "composer/installers": "^1.6",
         "wikimedia/composer-merge-plugin": "1.4.1",
         "cweagans/composer-patches": "~1.0"
     },
