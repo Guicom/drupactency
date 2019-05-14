@@ -1,7 +1,7 @@
 {
     "name": "guicom/drupactency",
     "description": "Drupency for Drupal 8 starterkit",
-    "type": "drupal-socle",
+    "type": "drupal-profile",
     "license": "proprietary",
     "minimum-stability": "dev",
     "prefer-stable": true,
