@@ -1,7 +1,7 @@
 {
     "name": "guicom/drupactency",
     "description": "Drupency for Drupal 8 starterkit",
-    "type": "project",
+    "type": "socle",
     "license": "proprietary",
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -54,19 +54,17 @@
   "scripts": {
     "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
     "pre-install-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+      "DupActency\\composer\\ScriptHandler::checkComposerVersion"
     ],
     "pre-update-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+      "DupActency\\composer\\ScriptHandler::checkComposerVersion"
     ],
     "post-install-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-      "DrupalProject\\composer\\ScriptHandler::moveSubency",
+      "DupActency\\composer\\ScriptHandler::createRequiredFiles",
       "@drupal-scaffold"
     ],
     "post-update-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-      "DrupalProject\\composer\\ScriptHandler::moveSubency",
+      "DupActency\\composer\\ScriptHandler::createRequiredFiles",
       "@drupal-scaffold"
     ]
   }
